@@ -21,14 +21,10 @@ export const routes: Routes = [
       import(
         './pages/observable-user-list-page/observable-user-list-page.component'
       ).then((m) => m.ObservableUserListPageComponent),
+    //     import(
+    //       './pages/signal-user-list-page/signal-user-list-page.component'
+    //     ).then((m) => m.SignalUserListPageComponent),
   },
-  // {
-  //   path: 'users/list',
-  //   loadComponent: () =>
-  //     import(
-  //       './pages/signal-user-list-page/signal-user-list-page.component'
-  //     ).then((m) => m.SignalUserListPageComponent),
-  // },
   {
     path: 'users/new',
     loadComponent: () =>

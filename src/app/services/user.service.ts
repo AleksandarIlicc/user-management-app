@@ -1,4 +1,4 @@
-import { Injectable, signal, Signal } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
 import { ManagedUser } from '../model/IUser';
 import { SingleUserResponse, UserResponse } from '../model/IApiResponse';
@@ -80,8 +80,6 @@ export class UserService {
     },
   ];
 
-  constructor() {}
-
   getAllUsers(): Observable<UserResponse> {
     if (!this.managedUsers || this.managedUsers.length === 0) {
       return throwError(() => {
@@ -97,17 +95,6 @@ export class UserService {
         users: this.managedUsers,
       });
     }
-  }
-
-  getAllUsersWithSignal(): Signal<UserResponse> {
-    return signal({
-      success: this.managedUsers.length > 0,
-      message:
-        this.managedUsers.length > 0
-          ? 'Users fetch successfully'
-          : "Users didn't found",
-      users: this.managedUsers,
-    });
   }
 
   getSingleUser(userId: string | null): Observable<SingleUserResponse> {
