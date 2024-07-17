@@ -1,0 +1,82 @@
+<form
+  [formGroup]="registerForm"
+  (ngSubmit)="onSubmit($event)"
+  class="container mt-5 p-4 border rounded"
+>
+  <div class="mb-3">
+    <label for="name" class="form-label">Name:</label>
+    <input
+      id="name"
+      formControlName="name"
+      type="text"
+      class="form-control"
+      [class.is-invalid]="isControlInvalid('name')"
+    />
+    <div *ngIf="isControlInvalid('name')" class="invalid-feedback">
+      <small>{{ getValidationMessage("name", "required") }}</small>
+    </div>
+  </div>
+  <div class="mb-3">
+    <label for="email" class="form-label">Email:</label>
+    <input
+      id="email"
+      formControlName="email"
+      type="email"
+      class="form-control"
+      [class.is-invalid]="isControlInvalid('email')"
+    />
+    <div *ngIf="isControlInvalid('email')" class="invalid-feedback">
+      <small>{{ getValidationMessage("email", "required") }}</small>
+      <small>{{ getValidationMessage("email", "email") }}</small>
+    </div>
+  </div>
+  <div class="mb-3">
+    <label for="password" class="form-label">Password:</label>
+    <input
+      id="password"
+      formControlName="password"
+      type="password"
+      class="form-control"
+      [class.is-invalid]="isControlInvalid('password')"
+    />
+    <div *ngIf="isControlInvalid('password')" class="invalid-feedback">
+      <small>{{ getValidationMessage("password", "required") }}</small>
+      <small>{{ getValidationMessage("password", "passwordStrength") }}</small>
+    </div>
+  </div>
+  <div class="mb-3">
+    <label for="confirmPassword" class="form-label">Confirm Password:</label>
+    <input
+      id="confirmPassword"
+      formControlName="confirmPassword"
+      type="password"
+      class="form-control"
+      [class.is-invalid]="
+        isControlInvalid('confirmPassword') ||
+        (submitted && registerForm.hasError('passwordsMismatch'))
+      "
+    />
+    <div
+      *ngIf="
+        isControlInvalid('confirmPassword') ||
+        (submitted && registerForm.hasError('passwordsMismatch'))
+      "
+      class="invalid-feedback"
+    >
+      <small>{{ getValidationMessage("confirmPassword", "required") }}</small>
+      <br />
+      <small>{{
+        validationMessages["confirmPassword"]["passwordsMismatch"]
+      }}</small>
+    </div>
+  </div>
+  <button type="submit" class="btn btn-primary" [disabled]="isSubmitting">
+    Register
+  </button>
+  <div class="mt-3">
+    <p>
+      Already have an account?
+      <a class="pe-auto" role="button" routerLink="/login">Login here</a>
+    </p>
+  </div>
+</form>

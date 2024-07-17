@@ -1,0 +1,82 @@
+<div class="container mt-5">
+  <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+    <div class="mb-3">
+      <label for="name" class="form-label">Name:</label>
+      <input
+        id="name"
+        formControlName="name"
+        type="text"
+        class="form-control"
+        [class.is-invalid]="isControlInvalid('name')"
+      />
+      <div *ngIf="isControlInvalid('name')" class="invalid-feedback">
+        <small>{{ getValidationMessage("name", "required") }}</small>
+      </div>
+    </div>
+    <div class="mb-3">
+      <label for="email" class="form-label">Email:</label>
+      <input
+        id="email"
+        formControlName="email"
+        type="email"
+        class="form-control"
+        [class.is-invalid]="isControlInvalid('email')"
+      />
+      <div *ngIf="isControlInvalid('email')" class="invalid-feedback">
+        <small>{{ getValidationMessage("email", "required") }}</small>
+        <small>{{ getValidationMessage("email", "email") }}</small>
+      </div>
+    </div>
+    <div class="mb-3">
+      <label for="type" class="form-label">Type:</label>
+      <select
+        id="type"
+        formControlName="type"
+        class="form-control"
+        [class.is-invalid]="isControlInvalid('type')"
+      >
+        <option value="individual">Individual</option>
+        <option value="company">Company</option>
+      </select>
+      <div *ngIf="isControlInvalid('type')" class="invalid-feedback">
+        <small>{{ getValidationMessage("type", "required") }}</small>
+      </div>
+    </div>
+    <div class="mb-3" *ngIf="userForm.get('type')?.value === 'company'">
+      <label for="pib" class="form-label">PIB:</label>
+      <input
+        id="pib"
+        formControlName="pib"
+        type="text"
+        class="form-control"
+        [class.is-invalid]="isControlInvalid('pib')"
+      />
+      <div *ngIf="isControlInvalid('pib')" class="invalid-feedback">
+        <small>{{ getValidationMessage("pib", "required") }}</small>
+        <small>{{ getValidationMessage("pib", "pattern") }}</small>
+      </div>
+    </div>
+    <div class="mb-3" *ngIf="userForm.get('type')?.value === 'company'">
+      <label for="mbr" class="form-label">MBR:</label>
+      <input
+        id="mbr"
+        formControlName="mbr"
+        type="text"
+        class="form-control"
+        [class.is-invalid]="isControlInvalid('mbr')"
+      />
+      <div *ngIf="isControlInvalid('mbr')" class="invalid-feedback">
+        <small>{{ getValidationMessage("mbr", "required") }}</small>
+        <small>{{ getValidationMessage("mbr", "pattern") }}</small>
+      </div>
+    </div>
+    <button
+      type="submit"
+      class="btn btn-primary me-2"
+      [disabled]="isSubmitting"
+    >
+      Save
+    </button>
+    <a routerLink="/users/list" class="btn btn-secondary">Back to List</a>
+  </form>
+</div>

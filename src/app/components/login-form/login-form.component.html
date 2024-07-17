@@ -1,0 +1,43 @@
+<form
+  [formGroup]="loginForm"
+  (ngSubmit)="onSubmit($event)"
+  class="container mt-5 p-4 border rounded"
+>
+  <div class="mb-3">
+    <label for="email" class="form-label">Email:</label>
+    <input
+      id="email"
+      formControlName="email"
+      type="email"
+      class="form-control"
+      [class.is-invalid]="isControlInvalid('email')"
+    />
+    <div *ngIf="isControlInvalid('email')" class="invalid-feedback">
+      <small>{{ getValidationMessage("email", "required") }}</small>
+      <small>{{ getValidationMessage("email", "email") }}</small>
+    </div>
+  </div>
+  <div class="mb-3">
+    <label for="password" class="form-label">Password:</label>
+    <input
+      id="password"
+      formControlName="password"
+      type="password"
+      class="form-control"
+      [class.is-invalid]="isControlInvalid('password')"
+    />
+    <div *ngIf="isControlInvalid('password')" class="invalid-feedback">
+      <small>{{ getValidationMessage("password", "required") }}</small>
+      <small>{{ getValidationMessage("password", "passwordStrength") }}</small>
+    </div>
+  </div>
+  <button type="submit" class="btn btn-success" [disabled]="isSubmitting">
+    Login
+  </button>
+  <div class="mt-3">
+    <p>
+      Don't have an account?
+      <a class="pe-auto" role="button" routerLink="/register">Register here</a>
+    </p>
+  </div>
+</form>

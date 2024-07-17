@@ -1,0 +1,16 @@
+<div class="container mt-5">
+  <ng-container *ngIf="user$ | async as response">
+    <ng-container *ngIf="response.success && response.user as user">
+      <app-edit-form
+        [user]="user"
+        (formSubmit)="handleUserUpdate($event)"
+      ></app-edit-form>
+    </ng-container>
+    <div *ngIf="!response.success" class="alert alert-danger" role="alert">
+      <h4 class="alert-heading">User Not Found</h4>
+      <p>{{ response.message }}</p>
+      <hr />
+      <a routerLink="/users/list" class="btn btn-secondary">Back to List</a>
+    </div>
+  </ng-container>
+</div>

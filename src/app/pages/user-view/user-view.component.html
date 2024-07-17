@@ -1,0 +1,29 @@
+<div class="container mt-5">
+  <ng-container *ngIf="user$ | async as response">
+    <div *ngIf="response.success" class="card shadow-lg">
+      <div class="card-header bg-primary text-white">
+        <h2>{{ response.user?.name }}</h2>
+      </div>
+      <div class="card-body">
+        <p><strong>Email:</strong> {{ response.user?.email }}</p>
+        <p><strong>Type:</strong> {{ response.user?.type }}</p>
+        <div *ngIf="response.user?.type === 'company'">
+          <p><strong>PIB:</strong> {{ response.user?.pib }}</p>
+          <p><strong>MBR:</strong> {{ response.user?.mbr }}</p>
+        </div>
+        <a routerLink="/users/list" class="btn btn-secondary mt-3"
+          >Back to List</a
+        >
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="errorMessage">
+    <div class="alert alert-danger" role="alert">
+      <h4 class="alert-heading">User Not Found</h4>
+      <p>{{ errorMessage }}</p>
+      <hr />
+      <a routerLink="/users/list" class="btn btn-secondary">Back to List</a>
+    </div>
+  </ng-container>
+</div>
