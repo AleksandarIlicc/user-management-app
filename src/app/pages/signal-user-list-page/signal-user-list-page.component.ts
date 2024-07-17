@@ -2,7 +2,6 @@ import { Component, inject, Signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SignalUserListComponent } from '../../components/signal-user-list/signal-user-list.component';
 import { UserService } from '../../services/user.service';
-import { ManagedUser } from '../../model/IUser';
 import { UserResponse } from 'src/app/model/IApiResponse';
 
 @Component({
@@ -15,6 +14,4 @@ import { UserResponse } from 'src/app/model/IApiResponse';
 export class SignalUserListPageComponent {
   userService: UserService = inject(UserService);
   userResponse: Signal<UserResponse> = this.userService.getAllUsersWithSignal();
-
-  constructor() {}
 }

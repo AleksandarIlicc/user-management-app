@@ -110,7 +110,7 @@ export class UserService {
     });
   }
 
-  getSingleUser(userId: string): Observable<SingleUserResponse> {
+  getSingleUser(userId: string | null): Observable<SingleUserResponse> {
     const user = this.managedUsers.find((user) => user.id === userId);
 
     if (user) {
@@ -163,7 +163,7 @@ export class UserService {
   }
 
   updateUser(
-    id: string,
+    id: string | null,
     userData: Partial<ManagedUser>
   ): Observable<{ success: boolean; message: string; user?: ManagedUser }> {
     const userIndex = this.managedUsers.findIndex((user) => user.id === id);

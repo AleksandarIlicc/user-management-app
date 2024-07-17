@@ -20,14 +20,12 @@ export class UserEditPageComponent implements OnDestroy {
   route: ActivatedRoute = inject(ActivatedRoute);
   router: Router = inject(Router);
 
-  userId!: string;
-  submitted: boolean = false;
-  isSubmitting: boolean = false;
+  userId!: string | null;
   private destroy$ = new Subject<void>();
 
   user$: Observable<SingleUserResponse | undefined> = this.route.paramMap.pipe(
     switchMap((params) => {
-      this.userId = params.get('userId')!;
+      this.userId = params.get('userId');
       return this.userService.getSingleUser(this.userId);
     })
   );

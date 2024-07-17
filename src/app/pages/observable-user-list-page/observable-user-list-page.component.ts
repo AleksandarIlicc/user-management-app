@@ -32,6 +32,4 @@ export class ObservableUserListPageComponent {
 
   currentUser$: Observable<string | undefined> =
     this.authService.currentUserAction$.pipe(map((user) => user?.name));
-
-  constructor() {}
 }

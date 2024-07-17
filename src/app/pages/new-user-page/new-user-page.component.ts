@@ -18,8 +18,6 @@ export class NewUserPageComponent implements OnDestroy {
   router: Router = inject(Router);
   private destroy$ = new Subject<void>();
 
-  constructor() {}
-
   handleUserCreate(userData: ManagedUser) {
     this.userService
       .addUser(userData)
