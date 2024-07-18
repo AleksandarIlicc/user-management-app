@@ -2,7 +2,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
 import { AppUserForm } from '../forms/user-form/app-user-form';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { ManagedUser } from 'src/app/model/IUser';
+import { User } from 'src/app/model/user.model';
 import {
   getValidationMessage,
   isControlInvalid,
@@ -17,7 +17,7 @@ import { validationMessages } from '../../common/validation-messages';
   styleUrl: './user-form.component.css',
 })
 export class UserFormComponent {
-  @Output() formSubmit = new EventEmitter<ManagedUser>();
+  @Output() formSubmit = new EventEmitter<User>();
   userForm: AppUserForm = new AppUserForm();
   submitted = false;
   isSubmitting = false;

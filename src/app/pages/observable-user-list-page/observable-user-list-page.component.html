@@ -8,13 +8,16 @@
     <a routerLink="/users/new" class="btn btn-primary">New User</a>
   </div>
 
-  <ng-container *ngIf="users$ | async as users">
-    <app-observable-user-list [users]="users.users"></app-observable-user-list>
-  </ng-container>
+  <ng-container *ngIf="users$ | async as response">
+    <ng-container *ngIf="response.success && response.users as users">
+      <app-observable-user-list [users]="users"></app-observable-user-list>
+    </ng-container>
 
-  <div class="row" *ngIf="errorMessage">
-    <div class="col-md-12">
-      <div class="alert alert-warning">{{ errorMessage }}</div>
+    <div *ngIf="!response.success" class="alert alert-danger" role="alert">
+      <h4 class="alert-heading">User Not Found</h4>
+      <p>{{ response.message }}</p>
+      <hr />
+      <a routerLink="/users/list" class="btn btn-secondary">Back to List</a>
     </div>
-  </div>
+  </ng-container>
 </div>

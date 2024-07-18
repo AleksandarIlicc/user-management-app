@@ -1,9 +1,10 @@
-import { Component, inject, OnDestroy } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Observable, tap } from 'rxjs';
 import { LoginFormComponent } from '../../components/login-form/login-form.component';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { CommonModule } from '@angular/common';
-import { catchError, EMPTY, Subject, takeUntil, tap } from 'rxjs';
+import { IAuthResponse } from 'src/app/model/auth-response.model';
 
 @Component({
   selector: 'app-login-page',
@@ -12,29 +13,20 @@ import { catchError, EMPTY, Subject, takeUntil, tap } from 'rxjs';
   templateUrl: './login-page.component.html',
   styleUrl: './login-page.component.css',
 })
-export class LoginPageComponent implements OnDestroy {
+export class LoginPageComponent {
   authService: AuthService = inject(AuthService);
   router: Router = inject(Router);
-  errorMessage: string | null = null;
-  success: boolean = false;
-  destroy$ = new Subject<void>();
+
+  loginAction$!: Observable<IAuthResponse>;
 
   handleLogin(credentials: { email: string; password: string }) {
-    this.authService
+    this.loginAction$ = this.authService
       .login(credentials.email, credentials.password)
       .pipe(
-        tap(() => this.router.navigate(['/users/list'])),
-        catchError((err) => {
-          this.errorMessage = err.message;
-          return EMPTY;
-        }),
-        takeUntil(this.destroy$)
-      )
-      .subscribe();
-  }
-
-  ngOnDestroy() {
-    this.destroy$.next();
-    this.destroy$.complete();
+        tap(
+          (response) =>
+            response.success && this.router.navigate(['/users/list'])
+        )
+      );
   }
 }

@@ -1,5 +1,5 @@
 import { Component, Input, Signal } from '@angular/core';
-import { ManagedUser } from '../../model/IUser';
+import { User } from '../../model/user.model';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
@@ -11,5 +11,5 @@ import { RouterModule } from '@angular/router';
   styleUrl: './signal-user-list.component.css',
 })
 export class SignalUserListComponent {
-  @Input() users!: ManagedUser[];
+  @Input() users!: User[];
 }

@@ -1,7 +1,7 @@
 import { Component, inject, Signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SignalUserListComponent } from '../../components/signal-user-list/signal-user-list.component';
-import { ManagedUser } from 'src/app/model/IUser';
+import { User } from 'src/app/model/user.model';
 import { UsersSignalService } from 'src/app/services/users-signal.service';
 
 @Component({
@@ -13,5 +13,5 @@ import { UsersSignalService } from 'src/app/services/users-signal.service';
 })
 export class SignalUserListPageComponent {
   usersSignalService: UsersSignalService = inject(UsersSignalService);
-  managedUsers: Signal<ManagedUser[]> = this.usersSignalService.managedUsers;
+  managedUsers: Signal<User[]> = this.usersSignalService.managedUsers;
 }

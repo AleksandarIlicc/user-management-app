@@ -3,7 +3,7 @@ import { UserFormComponent } from '../../components/user-form/user-form.componen
 import { UserService } from '../../services/user.service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { ManagedUser } from 'src/app/model/IUser';
+import { User } from 'src/app/model/user.model';
 import { Subject, takeUntil, tap } from 'rxjs';
 
 @Component({
@@ -18,7 +18,7 @@ export class NewUserPageComponent implements OnDestroy {
   router: Router = inject(Router);
   private destroy$ = new Subject<void>();
 
-  handleUserCreate(userData: ManagedUser) {
+  handleUserCreate(userData: User) {
     this.userService
       .addUser(userData)
       .pipe(

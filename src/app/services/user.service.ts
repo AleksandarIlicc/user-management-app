@@ -5,16 +5,17 @@ import {
   map,
   Observable,
   of,
+  switchMap,
   throwError,
 } from 'rxjs';
-import { ManagedUser } from '../model/IUser';
-import { SingleUserResponse, UserResponse } from '../model/IApiResponse';
+import { User } from '../model/user.model';
+import { UserResponse, UsersResponse } from '../model/responses.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
-  private managedUsers: ManagedUser[] = [
+  private managedUsers: User[] = [
     {
       id: '1',
       name: 'Alice Smith',
@@ -87,39 +88,36 @@ export class UserService {
     },
   ];
 
-  private usersSubject = new BehaviorSubject<ManagedUser[]>(this.managedUsers);
+  private usersSubject = new BehaviorSubject<User[]>(this.managedUsers);
 
-  allUsers$: Observable<UserResponse> = this.usersSubject.asObservable().pipe(
+  allUsers$: Observable<UsersResponse> = this.usersSubject.asObservable().pipe(
     map((users) => ({
       success: true,
       message: 'Users fetch successfully',
       users: users,
     })),
     catchError(() => {
-      return throwError(() => ({
+      return of({
         success: false,
         message: "Users didn't found",
-      }));
+      });
     })
   );
 
-  getSingleUser(userId: string | null): Observable<SingleUserResponse> {
-    const user = this.managedUsers.find((user) => user.id === userId);
-
-    if (user) {
-      return of({
+  getSingleUser(userId: string | null): Observable<UserResponse> {
+    return this.findUserById(userId).pipe(
+      map((user) => ({
         success: true,
-        message: 'User fetch successfully',
+        message: 'User fetched successfully',
         user: user,
-      });
-    } else {
-      return throwError(() => {
-        return {
+      })),
+      catchError(() => {
+        return of({
           success: false,
-          message: "User doesn't exists",
-        };
-      });
-    }
+          message: "User doesn't exist",
+        });
+      })
+    );
   }
 
   addUser(userData: {
@@ -128,20 +126,18 @@ export class UserService {
     type: string;
     pib?: string;
     mbr?: string;
-  }): Observable<{ success: boolean; message: string; user?: ManagedUser }> {
+  }): Observable<UsersResponse> {
     const existingUser = this.managedUsers.find(
       (user) => user.email === userData.email
     );
 
     if (existingUser) {
-      return throwError(() => {
-        return {
-          success: false,
-          message: 'User already exists',
-        };
+      return of({
+        success: false,
+        message: 'User already exists',
       });
     } else {
-      const newUser: ManagedUser = {
+      const newUser: User = {
         id: (this.managedUsers.length + 1).toString(),
         ...userData,
       };
@@ -157,33 +153,48 @@ export class UserService {
 
   updateUser(
     id: string | null,
-    userData: Partial<ManagedUser>
-  ): Observable<{ success: boolean; message: string; user?: ManagedUser }> {
-    const userIndex = this.managedUsers.findIndex((user) => user.id === id);
-
-    if (userIndex !== -1) {
-      const currentUser = this.managedUsers[userIndex];
-      const updatedUser = { ...currentUser, ...userData };
-
-      if (currentUser.type === 'company' && userData.type === 'individual') {
-        updatedUser.pib = '';
-        updatedUser.mbr = '';
-      }
-
-      this.managedUsers[userIndex] = updatedUser;
-
-      return of({
-        success: true,
-        message: 'User updated successfully',
-        user: updatedUser,
-      });
-    } else {
-      return throwError(() => {
-        return {
+    userData: Partial<User>
+  ): Observable<{ success: boolean; message: string; user?: User }> {
+    return this.findUserById(id).pipe(
+      switchMap((currentUser) => this.updateUserData(currentUser, userData)),
+      catchError((error) =>
+        of({
           success: false,
-          message: 'User not found',
-        };
-      });
+          message: error.message,
+        })
+      )
+    );
+  }
+
+  private findUserById(id: string | null): Observable<User> {
+    const userIndex = this.managedUsers.findIndex((user) => user.id === id);
+    if (userIndex !== -1) {
+      return of(this.managedUsers[userIndex]);
+    } else {
+      return throwError(() => new Error('User not found'));
     }
+  }
+
+  private updateUserData(
+    currentUser: User,
+    userData: Partial<User>
+  ): Observable<{ success: boolean; message: string; user: User }> {
+    const updatedUser = { ...currentUser, ...userData };
+
+    if (currentUser.type === 'company' && userData.type === 'individual') {
+      updatedUser.pib = '';
+      updatedUser.mbr = '';
+    }
+
+    const userIndex = this.managedUsers.findIndex(
+      (user) => user.id === currentUser.id
+    );
+    this.managedUsers[userIndex] = updatedUser;
+
+    return of({
+      success: true,
+      message: 'User updated successfully',
+      user: updatedUser,
+    });
   }
 }

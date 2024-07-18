@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { ManagedUser } from '../../model/IUser';
+import { User } from '../../model/user.model';
 
 @Component({
   selector: 'app-observable-user-list',
@@ -11,5 +11,5 @@ import { ManagedUser } from '../../model/IUser';
   styleUrl: './observable-user-list.component.css',
 })
 export class ObservableUserListComponent {
-  @Input() users: ManagedUser[] | undefined = [];
+  @Input() users: User[] | undefined = [];
 }

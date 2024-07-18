@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { catchError, EMPTY, map, Observable, tap } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { ObservableUserListComponent } from '../../components/observable-user-list/observable-user-list.component';
 import { UserService } from '../../services/user.service';
-import { UserResponse } from 'src/app/model/IApiResponse';
+import { UsersResponse } from 'src/app/model/responses.model';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
@@ -18,17 +18,8 @@ import { AuthService } from 'src/app/services/auth.service';
 export class ObservableUserListPageComponent {
   userService: UserService = inject(UserService);
   authService: AuthService = inject(AuthService);
-  errorMessage: string = '';
 
-  users$: Observable<UserResponse> = this.userService.allUsers$.pipe(
-    catchError((error) => {
-      this.errorMessage = error.message;
-      return EMPTY;
-    }),
-    tap((data) => {
-      console.log('Data received:', data);
-    })
-  );
+  users$: Observable<UsersResponse> = this.userService.allUsers$;
 
   currentUser$: Observable<string | undefined> =
     this.authService.currentUserAction$.pipe(map((user) => user?.name));

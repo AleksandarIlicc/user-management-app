@@ -4,9 +4,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Observable, Subject, switchMap, takeUntil, tap } from 'rxjs';
 import { UserService } from '../../services/user.service';
-import { ManagedUser } from '../../model/IUser';
+import { User } from '../../model/user.model';
 import { EditFormComponent } from '../../components/edit-form/edit-form/edit-form.component';
-import { SingleUserResponse } from 'src/app/model/IApiResponse';
+import { UserResponse } from 'src/app/model/responses.model';
 
 @Component({
   selector: 'app-user-edit',
@@ -20,21 +20,24 @@ export class UserEditPageComponent implements OnDestroy {
   route: ActivatedRoute = inject(ActivatedRoute);
   router: Router = inject(Router);
 
-  userId!: string | null;
+  userId: string | null = null;
   private destroy$ = new Subject<void>();
 
-  user$: Observable<SingleUserResponse | undefined> = this.route.paramMap.pipe(
+  user$: Observable<UserResponse | undefined> = this.route.paramMap.pipe(
     switchMap((params) => {
       this.userId = params.get('userId');
       return this.userService.getSingleUser(this.userId);
     })
   );
 
-  handleUserUpdate(userData: ManagedUser) {
+  handleUserUpdate(userData: User) {
     this.userService
       .updateUser(this.userId, userData)
       .pipe(
-        tap(() => this.router.navigate(['/users/list'])),
+        tap(
+          (response) =>
+            response.success && this.router.navigate(['/users/list'])
+        ),
         takeUntil(this.destroy$)
       )
       .subscribe();

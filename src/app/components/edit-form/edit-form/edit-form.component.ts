@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { ManagedUser } from 'src/app/model/IUser';
+import { User } from 'src/app/model/user.model';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import {
@@ -18,8 +18,8 @@ import { AppUserForm } from '../../forms/user-form/app-user-form';
   styleUrl: './edit-form.component.css',
 })
 export class EditFormComponent implements OnInit {
-  @Input() user!: ManagedUser;
-  @Output() formSubmit = new EventEmitter<ManagedUser>();
+  @Input() user!: User;
+  @Output() formSubmit = new EventEmitter<User>();
 
   userForm!: AppUserForm;
   submitted: boolean = false;

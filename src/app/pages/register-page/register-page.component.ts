@@ -1,9 +1,10 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+import { Observable, tap } from 'rxjs';
 import { RegisterFormComponent } from '../../components/register-form/register-form.component';
 import { AuthService } from '../../services/auth.service';
-import { Router } from '@angular/router';
-import { catchError, EMPTY, Subject, takeUntil, tap } from 'rxjs';
+import { IAuthResponse } from 'src/app/model/auth-response.model';
 
 @Component({
   selector: 'app-register-page',
@@ -12,12 +13,11 @@ import { catchError, EMPTY, Subject, takeUntil, tap } from 'rxjs';
   templateUrl: './register-page.component.html',
   styleUrl: './register-page.component.css',
 })
-export class RegisterPageComponent implements OnDestroy {
-  errorMessage: string | null = null;
-  success: boolean = false;
-  destroy$ = new Subject<void>();
+export class RegisterPageComponent {
+  authService: AuthService = inject(AuthService);
+  router: Router = inject(Router);
 
-  constructor(private authService: AuthService, private router: Router) {}
+  registerAction$!: Observable<IAuthResponse>;
 
   handleRegister(credentials: {
     name: string;
@@ -25,21 +25,13 @@ export class RegisterPageComponent implements OnDestroy {
     password: string;
     confirmPassword: string;
   }) {
-    this.authService
+    this.registerAction$ = this.authService
       .register(credentials.name, credentials.email, credentials.password)
       .pipe(
-        tap(() => this.router.navigate(['/users/list'])),
-        catchError((err) => {
-          this.errorMessage = err.message;
-          return EMPTY;
-        }),
-        takeUntil(this.destroy$)
-      )
-      .subscribe();
-  }
-
-  ngOnDestroy() {
-    this.destroy$.next();
-    this.destroy$.complete();
+        tap(
+          (response) =>
+            response.success && this.router.navigate(['/users/list'])
+        )
+      );
   }
 }

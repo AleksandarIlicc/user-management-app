@@ -1,8 +1,8 @@
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ManagedUser } from '../../../model/IUser';
+import { User } from '../../../model/user.model';
 
 export class AppUserForm extends FormGroup {
-  constructor(user?: ManagedUser) {
+  constructor(user?: User) {
     super({
       name: new FormControl(user?.name || '', {
         validators: [Validators.required],

@@ -1,11 +1,11 @@
 import { computed, Injectable, signal } from '@angular/core';
-import { ManagedUser } from '../model/IUser';
+import { User } from '../model/user.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UsersSignalService {
-  private state = signal<{ managedUsers: ManagedUser[] }>({ managedUsers: [] });
+  private state = signal<{ managedUsers: User[] }>({ managedUsers: [] });
 
   constructor() {
     this.fetchUsers();
