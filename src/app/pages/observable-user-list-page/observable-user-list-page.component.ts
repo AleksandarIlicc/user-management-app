@@ -20,7 +20,7 @@ export class ObservableUserListPageComponent {
   authService: AuthService = inject(AuthService);
   errorMessage: string = '';
 
-  users$: Observable<UserResponse> = this.userService.getAllUsers().pipe(
+  users$: Observable<UserResponse> = this.userService.allUsers$.pipe(
     catchError((error) => {
       this.errorMessage = error.message;
       return EMPTY;

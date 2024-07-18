@@ -9,11 +9,7 @@
   </div>
 
   <ng-container *ngIf="users$ | async as users">
-    <ng-container>
-      <app-observable-user-list
-        [users]="users.users"
-      ></app-observable-user-list>
-    </ng-container>
+    <app-observable-user-list [users]="users.users"></app-observable-user-list>
   </ng-container>
 
   <div class="row" *ngIf="errorMessage">

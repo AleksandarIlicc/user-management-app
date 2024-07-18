@@ -1,5 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, throwError } from 'rxjs';
+import {
+  BehaviorSubject,
+  catchError,
+  map,
+  Observable,
+  of,
+  throwError,
+} from 'rxjs';
 import { ManagedUser } from '../model/IUser';
 import { SingleUserResponse, UserResponse } from '../model/IApiResponse';
 
@@ -80,22 +87,21 @@ export class UserService {
     },
   ];
 
-  getAllUsers(): Observable<UserResponse> {
-    if (!this.managedUsers || this.managedUsers.length === 0) {
-      return throwError(() => {
-        return {
-          success: false,
-          message: "Users didn't found",
-        };
-      });
-    } else {
-      return of({
-        success: true,
-        message: 'Users fetch successfully',
-        users: this.managedUsers,
-      });
-    }
-  }
+  private usersSubject = new BehaviorSubject<ManagedUser[]>(this.managedUsers);
+
+  allUsers$: Observable<UserResponse> = this.usersSubject.asObservable().pipe(
+    map((users) => ({
+      success: true,
+      message: 'Users fetch successfully',
+      users: users,
+    })),
+    catchError(() => {
+      return throwError(() => ({
+        success: false,
+        message: "Users didn't found",
+      }));
+    })
+  );
 
   getSingleUser(userId: string | null): Observable<SingleUserResponse> {
     const user = this.managedUsers.find((user) => user.id === userId);
