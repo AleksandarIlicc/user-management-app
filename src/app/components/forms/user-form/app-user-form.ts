@@ -44,8 +44,10 @@ export class AppUserForm extends FormGroup {
       } else {
         pibControl?.disable();
         pibControl?.clearValidators();
+        pibControl?.reset();
         mbrControl?.disable();
         mbrControl?.clearValidators();
+        mbrControl?.reset();
       }
 
       pibControl?.updateValueAndValidity();

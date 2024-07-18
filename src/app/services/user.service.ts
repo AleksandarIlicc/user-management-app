@@ -162,7 +162,14 @@ export class UserService {
     const userIndex = this.managedUsers.findIndex((user) => user.id === id);
 
     if (userIndex !== -1) {
-      const updatedUser = { ...this.managedUsers[userIndex], ...userData };
+      const currentUser = this.managedUsers[userIndex];
+      const updatedUser = { ...currentUser, ...userData };
+
+      if (currentUser.type === 'company' && userData.type === 'individual') {
+        updatedUser.pib = '';
+        updatedUser.mbr = '';
+      }
+
       this.managedUsers[userIndex] = updatedUser;
 
       return of({
